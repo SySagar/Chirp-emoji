@@ -6,6 +6,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import type { User } from "@clerk/nextjs/dist/api";
 export const filterUserForClient = (user: User) => {
+
   return {
     id: user.id,
     username: user.username,
@@ -13,6 +14,8 @@ export const filterUserForClient = (user: User) => {
     externalUsername: user.externalAccounts.find((externalAccount) => externalAccount.provider === "oauth_github")?.username || null
   };
 };
+
+export type TUser = ReturnType<typeof filterUserForClient>
 
 export const profileRouter = createTRPCRouter({
   getUserByUsername: publicProcedure

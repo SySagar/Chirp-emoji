@@ -12,6 +12,7 @@ import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { PostView } from "~/components/postview";
 
 dayjs.extend(relativeTime);
 
@@ -81,33 +82,6 @@ const CreatePostWizard = () => {
   );
 };
 
-type PostWithUser = RouterOutputs["posts"]["getAll"][number];
-const PostView = (props: PostWithUser) => {
-  const { post, author } = props;
-  return (
-    <div key={post.id} className="bordr-b flex gap-4 border-slate-400 p-4">
-      <Image
-        src={author.profileImageUrl}
-        alt="Image"
-        className="h-16 w-16 rounded-full"
-        width={56}
-        height={56}
-      />
-      <div className="flex flex-col ">
-        <div className="flex gap-1 text-slate-300">
-          <Link href={`/@${author.username!}`}>
-            <span className="text-xl">{`@${author.username!}`}</span>
-          </Link>
-          <Link href={`/post/${post.id}`}>
-            <span>{`· ${dayjs(post.createdAt).fromNow()}`}</span>{" "}
-          </Link>
-        </div>
-        <span>{post.content}</span>
-      </div>
-    </div>
-  );
-};
-
 const Feed = () => {
   const { data, isLoading: postsLoading } = api.posts.getAll.useQuery();
 
@@ -122,7 +96,7 @@ const Feed = () => {
 
   return (
     <div className="flex grow flex-col overflow-y-scroll">
-      {data.map((fullPost) => (
+      {[...data, ...data].map((fullPost) => (
         <PostView {...fullPost} key={fullPost.post.id} />
       ))}
     </div>
